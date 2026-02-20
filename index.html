@@ -2,10 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful Squares</title>
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .square {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World</h1>
-    <p>This is a simple HTML page.</p>
+    <div id="container"></div>
+
+    <script>
+        const container = document.getElementById('container');
+        const numSquares = 16; // Количество квадратиков
+
+        // Функция для генерации случайного цвета
+        function getRandomColor() {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16);
+        }
+
+        // Создание квадратиков
+        for (let i = 0; i < numSquares; i++) {
+            const square = document.createElement('div');
+            square.classList.add('square');
+            square.style.backgroundColor = getRandomColor();
+            square.addEventListener('click', () => {
+                // При клике меняем цвет всех квадратиков кроме кликнутого
+                const squares = document.querySelectorAll('.square');
+                squares.forEach(sq => {
+                    if (sq !== square) {
+                        sq.style.backgroundColor = getRandomColor();
+                    }
+                });
+            });
+            container.appendChild(square);
+        }
+    </script>
 </body>
 </html>
