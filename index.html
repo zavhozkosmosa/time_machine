@@ -7,12 +7,17 @@
     <style>
         body {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
+        }
+        #container {
+            display: flex;
+            flex-wrap: wrap;
+            /* width for exactly two rows of 8 squares (100px + 20px margin each) */
+            width: 960px;
         }
         .square {
             width: 100px;
@@ -28,7 +33,7 @@
 
     <script>
         const container = document.getElementById('container');
-        const numSquares = 16; // Количество квадратиков
+        const numSquares = 16; // Количество квадратиков (две строки по 8 штук)
 
         // Функция для генерации случайного цвета
         function getRandomColor() {
