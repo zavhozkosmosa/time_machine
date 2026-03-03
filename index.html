@@ -31,6 +31,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            transition: opacity 0.5s ease-in-out;
         }
         
         .top-section {
@@ -340,7 +341,7 @@
             </div>
             
             <div class="button-row">
-                <button class="button"></button>
+                <button class="button" id="btn-left"></button>
                 <button class="button red" id="btn1">1</button>
                 <button class="button"></button>
                 <button class="button"></button>
@@ -415,6 +416,18 @@
             btn4 && btn4.addEventListener('click', () => {
                 if (statusRight) {
                     statusRight.style.backgroundColor = '#d0d0d0';
+                }
+            });
+            const btnLeft = document.getElementById('btn-left');
+            const panel = document.querySelector('.panel');
+            btnLeft && btnLeft.addEventListener('click', () => {
+                if (panel) {
+                    // fade to black
+                    panel.style.opacity = '0';
+                    // after 10 seconds, fade back
+                    setTimeout(() => {
+                        panel.style.opacity = '1';
+                    }, 10000);
                 }
             });
         })();
