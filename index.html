@@ -3,59 +3,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colorful Squares</title>
+    <title>Time Machine Control Panel</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
+            background-color: #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+            min-height: 100vh;
+            padding: 20px;
+            font-family: Arial, sans-serif;
         }
-        #container {
+        
+        .panel {
+            background-color: #000;
+            border: 3px solid #fff;
+            padding: 20px;
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 1.5;
             display: flex;
-            flex-wrap: wrap;
-            /* width for exactly two rows of 8 squares (100px + 20px margin each) */
-            width: 960px;
+            flex-direction: column;
+            gap: 15px;
         }
-        .square {
-            width: 100px;
-            height: 100px;
-            margin: 10px;
+        
+        .top-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.5fr;
+            gap: 15px;
+            align-items: start;
+            flex: 1;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            aspect-ratio: 1.5;
+        }
+        
+        .center-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            margin-top: 20px; /* push this section a bit lower */
+        }
+        
+        .logo-box {
+            /* logo with thin white frame, two colored halves */
+            width: 260px;               /* fixed width */
+            height: 140px;              /* fixed height */
+            border: 1px solid #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .logo-top, .logo-bottom {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .logo-top {
+            background-color: #ff8800; /* dark blue */
+        }
+        .logo-bottom {
+            background-color: #bd6800; /* light cyan */
+        }
+        .logo-text {
+            font-size: 20px;
+            line-height: 1;
+            margin-bottom: 0;
+            color: #000;
+        }
+        .system-label {
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: #000;
+            margin: 0;
+        }
+        
+        .system-label {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            letter-spacing: 2px;
+            margin-top: -10px;
+        }
+        
+        .dots-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+            padding: 20px;
+            background-color: #222;
+            border: 2px solid #555;
+            /* keep full size, no width limit */
+        }
+        
+        .dot {
+            width: 60%;
+            aspect-ratio: 1;
+            background-color: #444;
+            border-radius: 50%;
+            border: 1px solid #666;
+            margin: auto;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+        
+        .top-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .label-box {
+            background-color: #e8e8e8;
+            border: 2px solid #999;
+            padding: 30px 12px;
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            letter-spacing: 1px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .white-square {
+            width: 80px;
+            height: 80px;
+            background-color: #e8e8e8;
+            border: 4px solid #cc3333;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: transform 0.2s;
+        }
+        
+        .white-square:hover {
+            transform: scale(1.05);
+        }
+        
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            order: -1;
+            width: 100%;
+            aspect-ratio: 1;
+        }
+        
+        .color-square {
+            width: 100%;
+            aspect-ratio: 1;
+            cursor: pointer;
+            border: 2px solid #444;
+            transition: all 0.2s;
+        }
+        
+        .color-square:hover {
+            transform: scale(1.05);
+            border-color: #666;
+        }
+        
+        .status-bars {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            width: 100%;
+            justify-content: stretch;
+            padding: 0;
+            flex: 0.5;
+        }
+        
+        .status-bar {
+            flex: 1;
+            background-color: #d0d0d0;
+            border: 2px solid #999;
+            padding: 30px;
+            text-align: center;
+            font-size: 25px;
+            color: #cc3333;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .button-row {
+            display: flex;
+            gap: 8px;
+            justify-content: space-around;
+            padding: 0;
+            flex: 0.3;
+            width: 100%;
+        }
+        
+        .button {
+            /* vertical rectangle like reference image */
+            width: 40px;
+            height: 60px;
+            border: 2px solid #999;
+            background-color: #e8e8e8;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            color: #333;
+            transition: all 0.2s;
+        }
+        
+        .button:hover {
+            background-color: #f5f5f5;
+            transform: scale(1.05);
+        }
+        
+        .button.red {
+            background-color: #cc3333;
+            color: #fff;
+        }
+        
+        .button.red:hover {
+            background-color: #ff4444;
         }
     </style>
 </head>
 <body>
-    <div id="container"></div>
-
+    <div class="panel">
+        <!-- Top Section -->
+        <div class="top-section">
+            <!-- Left Section -->
+            <div class="left-section">
+                <div class="logo-container">
+                    <div class="logo-box">
+                        <div class="logo-top">
+                            <div class="logo-text">ПУСК</div>
+                        </div>
+                        <div class="logo-bottom">
+                            <div class="system-label">DNL SYSTEM</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dots-grid">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            
+            <!-- Center Section -->
+            <div class="center-section">
+                <!-- label showing W, odd middle symbol, and S -->
+                <div class="label-box">W•ƒ•S</div>
+                <!-- white square below label -->
+                <div class="white-square" id="toggle-square"></div>
+            </div>
+            
+            <!-- Right Section -->
+            <div class="right-section">
+                <div class="color-grid">
+                    <div class="color-square" style="background-color: #002266;"></div>
+                    <div class="color-square" style="background-color: #e8e8e8;"></div>
+                    <div class="color-square" style="background-color: #ff8c00;"></div>
+                    <div class="color-square" style="background-color: #9d8b2c;"></div>
+                    <div class="color-square" style="background-color: #1a1a1a;"></div>
+                    <div class="color-square" style="background-color: #9d8b2c;"></div>
+                    <div class="color-square" style="background-color: #003366;"></div>
+                    <div class="color-square" style="background-color: #ff8c00;"></div>
+                    <div class="color-square" style="background-color: #b8d8f0;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Section -->
+        <div>
+            <div class="status-bars">
+                <div class="status-bar" id="status-left">ИСХОДНАЯ<br>СТАНЦИЯ</div>
+                <div class="status-bar" id="status-middle">КОНЕЧНАЯ<br>СТАНЦИЯ</div>
+                <div class="status-bar" id="status-right">ПЕРЕБРОСКА<br>ЗАКОНЧЕНА</div>
+            </div>
+            
+            <div class="button-row">
+                <button class="button"></button>
+                <button class="button red" id="btn1">1</button>
+                <button class="button"></button>
+                <button class="button"></button>
+                <button class="button"></button>
+                <button class="button red" id="btn2">2</button>
+                <button class="button"></button>
+                <button class="button"></button>
+                <button class="button red" id="btn3">3</button>
+                <button class="button" id="btn4"></button>
+            </div>
+        </div>
+    </div>
     <script>
-        const container = document.getElementById('container');
-        const numSquares = 16; // Количество квадратиков (две строки по 8 штук)
+        // color-changing logic for center white square
+        (function() {
+            const toggle = document.getElementById('toggle-square');
+            const cols = document.querySelectorAll('.color-square');
+            let intervalId = null;
 
-        // Функция для генерации случайного цвета
-        function getRandomColor() {
-            return '#' + Math.floor(Math.random() * 16777215).toString(16);
-        }
+            function randomColor() {
+                return '#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0');
+            }
 
-        // Создание квадратиков
-        for (let i = 0; i < numSquares; i++) {
-            const square = document.createElement('div');
-            square.classList.add('square');
-            square.style.backgroundColor = getRandomColor();
-            square.addEventListener('click', () => {
-                // При клике меняем цвет всех квадратиков кроме кликнутого
-                const squares = document.querySelectorAll('.square');
-                squares.forEach(sq => {
-                    if (sq !== square) {
-                        sq.style.backgroundColor = getRandomColor();
-                    }
-                });
+            function cycleColors() {
+                cols.forEach(el => el.style.backgroundColor = randomColor());
+            }
+
+            toggle.addEventListener('click', () => {
+                if (intervalId === null) {
+                    // start cycling every 500ms
+                    cycleColors();
+                    intervalId = setInterval(cycleColors, 500);
+                } else {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
             });
-            container.appendChild(square);
-        }
+            // button actions
+            const btn1 = document.getElementById('btn1');
+            const btn2 = document.getElementById('btn2');
+            const statusLeft = document.getElementById('status-left');
+            const statusMiddle = document.getElementById('status-middle');
+            btn1.addEventListener('click', () => {
+                if (statusLeft) {
+                    statusLeft.style.backgroundColor = '#ffffcc';
+                }
+            });
+            btn2 && btn2.addEventListener('click', () => {
+                if (statusLeft && statusMiddle) {
+                    // determine opposite colors
+                    const leftColor = statusLeft.style.backgroundColor || '';
+                    if (leftColor === 'rgb(255, 255, 204)' || leftColor === '#ffffcc') {
+                        statusLeft.style.backgroundColor = '#d0d0d0';
+                        statusMiddle.style.backgroundColor = '#ffffcc';
+                    } else {
+                        statusLeft.style.backgroundColor = '#ffffcc';
+                        statusMiddle.style.backgroundColor = '#d0d0d0';
+                    }
+                }
+            });
+            const btn3 = document.getElementById('btn3');
+            const statusRight = document.getElementById('status-right');
+            btn3 && btn3.addEventListener('click', () => {
+                if (statusMiddle && statusRight) {
+                    // swap their colors
+                    const midColor = statusMiddle.style.backgroundColor || '';
+                    statusMiddle.style.backgroundColor = statusRight.style.backgroundColor || '#d0d0d0';
+                    statusRight.style.backgroundColor = midColor || '#d0d0d0';
+                }
+            });
+            const btn4 = document.getElementById('btn4');
+            btn4 && btn4.addEventListener('click', () => {
+                if (statusRight) {
+                    statusRight.style.backgroundColor = '#d0d0d0';
+                }
+            });
+        })();
     </script>
 </body>
 </html>
